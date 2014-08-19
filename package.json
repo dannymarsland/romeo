@@ -1,0 +1,21 @@
+{
+  "name": "romeo",
+  "version": "0.0.1",
+  "description": "The TypeScript Library for Dependancy Injection",
+  "author": {
+    "name": "Danny Marsland",
+    "url": ""
+  },
+  "homepage": "https://github.com/dannymarsland/romeo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dannymarsland/romeo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dannymarsland/romeo/issues"
+  },
+  "dependencies": {
+    "grunt-typescipt-annotations": "git+https://github.com/dannymarsland/grunt-typescript-annotations.git",
+    "grunt-contrib-watch": "^0.6.1"
+  }
+}

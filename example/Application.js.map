@@ -1,0 +1,1 @@
+{"version":3,"file":"Application.js","sourceRoot":"","sources":["Application.ts"],"names":["Application","Application.constructor","Gallery","Gallery.constructor","Slider","Slider.constructor"],"mappings":"AAAA,yCAAyC;AAEzC;IAKIA;IACAC,CAACA;IACLD;AAACA,CAAAA,IAAA;;AAGD;IAAAE;;AAKCA,IAADA;AAACA,CAAAA,IAAA;;AAED;IAAAE;;AAGCA,IAADA;AAACA,CAAAA,IAAA"}
