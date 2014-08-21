@@ -7,6 +7,21 @@
       "type": "constructor"
     },
     "annotations": {
+      "constructor": {
+        "type": {
+          "name": "Slider",
+          "parent": null,
+          "type": "constructor"
+        },
+        "annotations": {
+          "bean": {
+            "annotation": "bean",
+            "params": {
+              "scope": "prototype"
+            }
+          }
+        }
+      },
       "$el": {
         "type": {
           "name": "$el",
@@ -31,6 +46,37 @@
       "type": "constructor"
     },
     "annotations": {
+      "constructor": {
+        "type": {
+          "name": "Gallery",
+          "parent": null,
+          "type": "constructor"
+        },
+        "annotations": {
+          "bean": {
+            "annotation": "bean",
+            "params": {
+              "scope": "prototype"
+            }
+          }
+        }
+      },
+      "el": {
+        "type": {
+          "name": "el",
+          "type": "JQuery",
+          "isArray": false
+        },
+        "annotations": {
+          "$element": {
+            "annotation": "$element",
+            "params": {
+              "qs": "#gallery",
+              "root": "body"
+            }
+          }
+        }
+      },
       "$el": {
         "type": {
           "name": "$el",
@@ -41,7 +87,7 @@
           "$element": {
             "annotation": "$element",
             "params": {
-              "qs": "#gallery"
+              "qs": "*"
             }
           }
         }
@@ -134,6 +180,30 @@
         },
         "annotations": {}
       },
+      "getExistingBean": {
+        "type": {
+          "name": "getExistingBean",
+          "type": "function",
+          "returns": {
+            "name": "any",
+            "type": "any",
+            "isArray": false
+          }
+        },
+        "annotations": {}
+      },
+      "getBean": {
+        "type": {
+          "name": "getBean",
+          "type": "function",
+          "returns": {
+            "name": "any",
+            "type": "any",
+            "isArray": false
+          }
+        },
+        "annotations": {}
+      },
       "process": {
         "type": {
           "name": "process",
@@ -195,9 +265,9 @@
         },
         "annotations": {}
       },
-      "getAnnotationsFromInstance": {
+      "getAnnotationsForInstance": {
         "type": {
-          "name": "getAnnotationsFromInstance",
+          "name": "getAnnotationsForInstance",
           "type": "function",
           "returns": {
             "name": "any",
@@ -347,6 +417,30 @@
           }
         },
         "annotations": {}
+      },
+      "getAnnotations": {
+        "type": {
+          "name": "getAnnotations",
+          "type": "function",
+          "returns": {
+            "name": "Annotation",
+            "type": "Annotation",
+            "isArray": true
+          }
+        },
+        "annotations": {}
+      },
+      "getClassAnnotation": {
+        "type": {
+          "name": "getClassAnnotation",
+          "type": "function",
+          "returns": {
+            "name": "Annotation",
+            "type": "Annotation",
+            "isArray": false
+          }
+        },
+        "annotations": {}
       }
     }
   },
@@ -453,6 +547,18 @@
           "returns": {
             "name": "any",
             "type": "any",
+            "isArray": false
+          }
+        },
+        "annotations": {}
+      },
+      "getType": {
+        "type": {
+          "name": "getType",
+          "type": "function",
+          "returns": {
+            "name": "Type",
+            "type": "Type",
             "isArray": false
           }
         },

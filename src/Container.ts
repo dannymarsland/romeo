@@ -3,7 +3,7 @@
 
 class Container {
 
-    private beans: {}[] = [];
+    private beans: any[] = [];
 
     constructor(
         private annotationReader : AnnotationReader,
@@ -17,6 +17,55 @@ class Container {
         } else {
             console.debug('Trying to add duplicate bean', bean);
         }
+    }
+
+    private getExistingBean(classConstructor: Function) {
+        for (var i=0; i <this.beans.length; i++) {
+            // no inheritance here
+            if (this.beans[i].constructor === classConstructor) {
+                return this.beans[i];
+            }
+        }
+        return null;
+    }
+
+    public getBean(classConstructor: Function): any {
+        var classAnnotations = this.annotationReader.getAnnotations(classConstructor);
+        if (classAnnotations) {
+            var beanAnnotation = classAnnotations.getClassAnnotation('bean');
+            if (beanAnnotation) {
+                var params = beanAnnotation.getParams({
+                    'scope': 'singleton'
+                });
+                var type = beanAnnotation.getType();
+                var constructorFn = type.getConstructor();
+                var scope = params['scope'];
+                if (scope == 'singleton') {
+                    var bean = this.getExistingBean(classConstructor);
+                    if (bean) {
+                        return bean;
+                    } else {
+                        throw new Error('Cannot find bean of type ' + type.getName() + ' in container. ');
+                    }
+                } else if (scope == 'prototype') {
+                    // create a brand new bean
+                    if (constructorFn) {
+                        var bean = new constructorFn();
+                        this.addBean(bean);
+                        return bean;
+                    } else {
+                        throw new Error('Could not get constructor for type:' + type.getName() + ' and so cannot create bean of this type')
+                    }
+                }
+
+
+            } else {
+                throw new Error('Cannot get bean of class ' + classAnnotations.getType().getName() + ' as it does not have @bean annotation' )
+            }
+        } else {
+            throw new Error('Could not get annotations for class: ' + classConstructor);
+        }
+
     }
 
     public process() {

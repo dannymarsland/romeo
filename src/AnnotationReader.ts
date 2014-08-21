@@ -5,14 +5,29 @@
 
 class Annotation {
 
-    constructor(private annotation: string, private params: {} = {}) {}
+    constructor(private type: Type, private annotation: string, private params: {} = {}) {}
+
+    public getType(): Type {
+        return this.type;
+    }
 
     public getAnnotation() {
         return this.annotation;
     }
 
-    public getParams() {
-        return this.params;
+    public getParams(defaults: {} = {}) {
+        var params = {};
+        for (var key in defaults) {
+            if (defaults.hasOwnProperty(key)) {
+                if (typeof this.params[key] !== "undefined") {
+                    params[key] = this.params[key];
+                } else {
+                    params[key] = defaults[key];
+                }
+            }
+
+        }
+        return params;
     }
 
     public toJSON() {
@@ -99,6 +114,27 @@ class AnnotatedClass {
             return false;
         });
     }
+
+    public getAnnotations(name: string): Annotation[] {
+        var annotations = [];
+        this.annotations.forEach((annotatedType: AnnotatedType)=>{
+            var annotation = annotatedType.getAnnotation(name);
+            if (annotation) {
+                annotations.push(annotation);
+            }
+        });
+        return annotations;
+    }
+
+    public getClassAnnotation(name: string): Annotation {
+        for (var i = 0; i<this.annotations.length; i++) {
+            var type = this.annotations[i].getType();
+            if (type.getType() == "constructor") {
+                return this.annotations[i].getAnnotation(name);
+            }
+        }
+        return null;
+    }
 }
 
 class AnnotationReader {
@@ -109,7 +145,7 @@ class AnnotationReader {
     constructor (private classAnnotations: {[d:string] :AnnotatedClassJson}) {
         var classAnnotationsArray = _map(classAnnotations,(key, obj)=>{
             return obj;
-        })
+        });
         classAnnotationsArray.forEach((classAnnotation: AnnotatedClassJson)=>{
             var classType = this.getClassFromJson(classAnnotation.type);
             var annotations: AnnotatedType[];
@@ -130,7 +166,7 @@ class AnnotationReader {
         return null;
     }
 
-    public getAnnotationsFromInstance(instance) {
+    public getAnnotationsForInstance(instance) {
         return this.getAnnotations(instance.constructor);
     }
 
@@ -177,7 +213,12 @@ class AnnotationReader {
 
     private getTypeFromJson(json: TypeJson): Type {
         // todo - implment properly
-        return this.getVariableFromJson(<TypeVariableJson> json);
+        if( typeof json['parent'] !== "undefined") {
+            return this.getClassFromJson(<TypeClassJson> json);
+        } else {
+            return this.getVariableFromJson(<TypeVariableJson> json);
+        }
+
     }
 
     private getVariableFromJson(json: TypeVariableJson): TypeVariable {
@@ -226,7 +267,8 @@ class AnnotationReader {
     private getAnnotatedTypeFromJson(json: AnnotatedTypeJson): AnnotatedType {
         var type = this.getTypeFromJson(json.type);
         var annotations = _map(json.annotations, (key, json: AnnotationJson) => {
-            return new Annotation(json.annotation, json.params);
+            return new Annotation(type, json.annotation, json.params);
+
         });
         return new AnnotatedType(type, annotations);
     }

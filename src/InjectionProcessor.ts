@@ -6,23 +6,25 @@ class InjectionProcessor implements AnnotationProcessorInterface {
 
     }
 
-    processBean(bean:{}, container:Container, reader:AnnotationReader) {
-        var classAnnotations = reader.getAnnotationsFromInstance(bean);
+    processBean(bean:{}, container: Container, reader:AnnotationReader) {
+        var classAnnotations = reader.getAnnotationsForInstance(bean);
         if (classAnnotations) {
-            var typeAnnotations = classAnnotations.getTypeAnnotations('inject');
-            for (var i=0 ; i <typeAnnotations.length; i++) {
-                var type = <TypeVariable>typeAnnotations[i].getType();
-                var annotation = typeAnnotations[i].getAnnotation('inject');
+            var annotations : Annotation[] = classAnnotations.getAnnotations('inject');
+            for (var i=0 ; i < annotations.length; i++) {
+                var type = annotations[i].getType();
+                var name = type.getName();
+                if (typeof bean[name] !== "undefined") {
+                    throw new Error('Could not inject "' + name + '" for type ' + type.getType() + ' as it is already defined')
+                }
                 var constructorFn = type.getConstructor();
                 if (constructorFn) {
                     console.log('Setting: ' + type.getName() + ' as new ' + type.getType());
-                    var itemToInject = new constructorFn();
+                    var itemToInject = container.getBean(constructorFn);
                     bean[type.getName()] = itemToInject;
                     container.addBean(itemToInject);
                 } else {
                     throw new Error('Could not get constructor for type:' + type.getType())
                 }
-
             }
         }
     }
@@ -31,7 +33,7 @@ class InjectionProcessor implements AnnotationProcessorInterface {
     }
 
     getAnnotationNames(): string[] {
-        return ['inject'];
+        return ['inject', 'bean'];
     }
 
 }

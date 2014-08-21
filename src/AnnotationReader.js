@@ -1,17 +1,33 @@
 ///<reference path="AnnotationsJson"/>
 ///<reference path="Types"/>
 var Annotation = (function () {
-    function Annotation(annotation, params) {
+    function Annotation(type, annotation, params) {
         if (typeof params === "undefined") { params = {}; }
+        this.type = type;
         this.annotation = annotation;
         this.params = params;
     }
+    Annotation.prototype.getType = function () {
+        return this.type;
+    };
+
     Annotation.prototype.getAnnotation = function () {
         return this.annotation;
     };
 
-    Annotation.prototype.getParams = function () {
-        return this.params;
+    Annotation.prototype.getParams = function (defaults) {
+        if (typeof defaults === "undefined") { defaults = {}; }
+        var params = {};
+        for (var key in defaults) {
+            if (defaults.hasOwnProperty(key)) {
+                if (typeof this.params[key] !== "undefined") {
+                    params[key] = this.params[key];
+                } else {
+                    params[key] = defaults[key];
+                }
+            }
+        }
+        return params;
     };
 
     Annotation.prototype.toJSON = function () {
@@ -92,6 +108,27 @@ var AnnotatedClass = (function () {
             return false;
         });
     };
+
+    AnnotatedClass.prototype.getAnnotations = function (name) {
+        var annotations = [];
+        this.annotations.forEach(function (annotatedType) {
+            var annotation = annotatedType.getAnnotation(name);
+            if (annotation) {
+                annotations.push(annotation);
+            }
+        });
+        return annotations;
+    };
+
+    AnnotatedClass.prototype.getClassAnnotation = function (name) {
+        for (var i = 0; i < this.annotations.length; i++) {
+            var type = this.annotations[i].getType();
+            if (type.getType() == "constructor") {
+                return this.annotations[i].getAnnotation(name);
+            }
+        }
+        return null;
+    };
     return AnnotatedClass;
 })();
 
@@ -122,7 +159,7 @@ var AnnotationReader = (function () {
         return null;
     };
 
-    AnnotationReader.prototype.getAnnotationsFromInstance = function (instance) {
+    AnnotationReader.prototype.getAnnotationsForInstance = function (instance) {
         return this.getAnnotations(instance.constructor);
     };
 
@@ -166,8 +203,11 @@ var AnnotationReader = (function () {
     };
 
     AnnotationReader.prototype.getTypeFromJson = function (json) {
-        // todo - implment properly
-        return this.getVariableFromJson(json);
+        if (typeof json['parent'] !== "undefined") {
+            return this.getClassFromJson(json);
+        } else {
+            return this.getVariableFromJson(json);
+        }
     };
 
     AnnotationReader.prototype.getVariableFromJson = function (json) {
@@ -215,7 +255,7 @@ var AnnotationReader = (function () {
     AnnotationReader.prototype.getAnnotatedTypeFromJson = function (json) {
         var type = this.getTypeFromJson(json.type);
         var annotations = _map(json.annotations, function (key, json) {
-            return new Annotation(json.annotation, json.params);
+            return new Annotation(type, json.annotation, json.params);
         });
         return new AnnotatedType(type, annotations);
     };

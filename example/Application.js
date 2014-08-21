@@ -5,12 +5,14 @@ var Application = (function () {
     return Application;
 })();
 
+/** @bean({"scope":"prototype"}) */
 var Gallery = (function () {
     function Gallery() {
     }
     return Gallery;
 })();
 
+/** @bean({"scope":"prototype"}) **/
 var Slider = (function () {
     function Slider() {
     }

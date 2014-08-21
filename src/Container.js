@@ -14,6 +14,50 @@ var Container = (function () {
         }
     };
 
+    Container.prototype.getExistingBean = function (classConstructor) {
+        for (var i = 0; i < this.beans.length; i++) {
+            if (this.beans[i].constructor === classConstructor) {
+                return this.beans[i];
+            }
+        }
+        return null;
+    };
+
+    Container.prototype.getBean = function (classConstructor) {
+        var classAnnotations = this.annotationReader.getAnnotations(classConstructor);
+        if (classAnnotations) {
+            var beanAnnotation = classAnnotations.getClassAnnotation('bean');
+            if (beanAnnotation) {
+                var params = beanAnnotation.getParams({
+                    'scope': 'singleton'
+                });
+                var type = beanAnnotation.getType();
+                var constructorFn = type.getConstructor();
+                var scope = params['scope'];
+                if (scope == 'singleton') {
+                    var bean = this.getExistingBean(classConstructor);
+                    if (bean) {
+                        return bean;
+                    } else {
+                        throw new Error('Cannot find bean of type ' + type.getName() + ' in container. ');
+                    }
+                } else if (scope == 'prototype') {
+                    if (constructorFn) {
+                        var bean = new constructorFn();
+                        this.addBean(bean);
+                        return bean;
+                    } else {
+                        throw new Error('Could not get constructor for type:' + type.getName() + ' and so cannot create bean of this type');
+                    }
+                }
+            } else {
+                throw new Error('Cannot get bean of class ' + classAnnotations.getType().getName() + ' as it does not have @bean annotation');
+            }
+        } else {
+            throw new Error('Could not get annotations for class: ' + classConstructor);
+        }
+    };
+
     Container.prototype.process = function () {
         // ok to add new beans as this loops ?
         var beans = this.beans;
