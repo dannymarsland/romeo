@@ -1,16 +1,16 @@
 ///<reference path="AnnotationsJson"/>
 ///<reference path="Types"/>
 var Annotation = (function () {
-    function Annotation(type, name) {
-        this.type = type;
-        this.name = name;
+    function Annotation(__type, __name) {
+        this.__type = __type;
+        this.__name = __name;
     }
     Annotation.prototype.getType = function () {
-        return this.type;
+        return this.__type;
     };
 
     Annotation.prototype.getName = function () {
-        return this.name;
+        return this.__name;
     };
     return Annotation;
 })();
@@ -57,6 +57,12 @@ var AnnotatedClass = (function () {
     AnnotatedClass.prototype.getAnnotations = function (name) {
         return this.annotations.filter(function (annotation) {
             return annotation.getName() === name;
+        });
+    };
+
+    AnnotatedClass.prototype.getAnnotationsFor = function (member, annotationName) {
+        return this.annotations.filter(function (annotation) {
+            return annotation.getName() === annotationName && annotation.getType().getName() === member;
         });
     };
 

@@ -4,14 +4,14 @@
 
 
 class Annotation {
-    constructor(private type: Type, private name: string) {}
+    constructor(private __type: Type, private __name: string) {}
 
     public getType(): Type {
-        return this.type;
+        return this.__type;
     }
 
     public getName() {
-        return this.name;
+        return this.__name;
     }
 }
 
@@ -64,6 +64,12 @@ class AnnotatedClass {
     public getAnnotations(name: string): Annotation[] {
         return this.annotations.filter((annotation: Annotation)=>{
             return annotation.getName() === name;
+        });
+    }
+
+    public getAnnotationsFor(member: string, annotationName: string): Annotation[] {
+        return this.annotations.filter((annotation: Annotation)=>{
+            return annotation.getName() === annotationName && annotation.getType().getName() === member;
         });
     }
 

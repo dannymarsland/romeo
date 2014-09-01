@@ -17,5 +17,9 @@ container.addBean(app);
 container.process();
 console.log('After processing', app);
 
+var jsonProcessor = new JsonProcessor(reader);
 
+var testJson = new JsonExample();
 
+console.log(testJson);
+console.log(jsonProcessor.classToJson(testJson));

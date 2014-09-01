@@ -31,4 +31,14 @@ var InjectAnnotation = (function (_super) {
     }
     return InjectAnnotation;
 })(Annotation);
+
+var JsonAnnotation = (function (_super) {
+    __extends(JsonAnnotation, _super);
+    function JsonAnnotation() {
+        _super.apply(this, arguments);
+        this.name = null;
+        this.ignore = false;
+    }
+    return JsonAnnotation;
+})(Annotation);
 //# sourceMappingURL=Annotations.js.map

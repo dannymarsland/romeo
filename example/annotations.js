@@ -1,5 +1,98 @@
 (function (context) {
   var data = {
+  "JsonExample": {
+    "type": {
+      "name": "JsonExample",
+      "parent": null,
+      "type": "constructor"
+    },
+    "annotations": {
+      "ignored": {
+        "type": {
+          "name": "ignored",
+          "type": "string",
+          "isArray": false
+        },
+        "annotations": {
+          "json": {
+            "annotation": "json",
+            "params": {
+              "ignore": true
+            }
+          }
+        }
+      },
+      "id": {
+        "type": {
+          "name": "id",
+          "type": "any",
+          "isArray": false
+        },
+        "annotations": {
+          "json": {
+            "annotation": "json",
+            "params": {}
+          }
+        }
+      },
+      "renamed": {
+        "type": {
+          "name": "renamed",
+          "type": "string",
+          "isArray": false
+        },
+        "annotations": {
+          "json": {
+            "annotation": "json",
+            "params": {
+              "name": "newname"
+            }
+          }
+        }
+      },
+      "notShown": {
+        "type": {
+          "name": "notShown",
+          "type": "any",
+          "isArray": false
+        },
+        "annotations": {}
+      }
+    }
+  },
+  "JsonProcessor": {
+    "type": {
+      "name": "JsonProcessor",
+      "parent": null,
+      "type": "constructor"
+    },
+    "annotations": {
+      "constructor": {
+        "type": {
+          "name": "constructor",
+          "type": "function",
+          "returns": {
+            "name": "any",
+            "type": "any",
+            "isArray": false
+          }
+        },
+        "annotations": {}
+      },
+      "classToJson": {
+        "type": {
+          "name": "classToJson",
+          "type": "function",
+          "returns": {
+            "name": "any",
+            "type": "any",
+            "isArray": false
+          }
+        },
+        "annotations": {}
+      }
+    }
+  },
   "Slider": {
     "type": {
       "name": "Slider",
@@ -137,6 +230,31 @@
             "type": "any",
             "isArray": false
           }
+        },
+        "annotations": {}
+      }
+    }
+  },
+  "JsonAnnotation": {
+    "type": {
+      "name": "JsonAnnotation",
+      "parent": "Annotation",
+      "type": "constructor"
+    },
+    "annotations": {
+      "name": {
+        "type": {
+          "name": "name",
+          "type": "string",
+          "isArray": false
+        },
+        "annotations": {}
+      },
+      "ignore": {
+        "type": {
+          "name": "ignore",
+          "type": "boolean",
+          "isArray": false
         },
         "annotations": {}
       }
@@ -407,6 +525,18 @@
       "getAnnotations": {
         "type": {
           "name": "getAnnotations",
+          "type": "function",
+          "returns": {
+            "name": "Annotation",
+            "type": "Annotation",
+            "isArray": true
+          }
+        },
+        "annotations": {}
+      },
+      "getAnnotationsFor": {
+        "type": {
+          "name": "getAnnotationsFor",
           "type": "function",
           "returns": {
             "name": "Annotation",

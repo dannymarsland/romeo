@@ -7,9 +7,15 @@ class BeanAnnotation extends Annotation {
 class $elementAnnotation extends Annotation {
     qs: string = null;
     root: string = 'this';
-
 }
 
 class InjectAnnotation extends Annotation {
 
 }
+
+
+class JsonAnnotation extends Annotation {
+    name: string = null;
+    ignore: boolean = false;
+}
+
