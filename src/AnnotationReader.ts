@@ -4,51 +4,18 @@
 
 
 class Annotation {
-
-    constructor(private type: Type, private annotation: string, private params: {} = {}) {}
+    constructor(private type: Type, private name: string) {}
 
     public getType(): Type {
         return this.type;
     }
 
-    public getAnnotation() {
-        return this.annotation;
-    }
-
-    public getParams(defaults: {} = {}) {
-        var params = {};
-        for (var key in defaults) {
-            if (defaults.hasOwnProperty(key)) {
-                if (typeof this.params[key] !== "undefined") {
-                    params[key] = this.params[key];
-                } else {
-                    params[key] = defaults[key];
-                }
-            }
-
-        }
-        return params;
-    }
-
-    public toJSON() {
-        return {
-            "annotation": this.annotation,
-            "params": this.params
-        }
+    public getName() {
+        return this.name;
     }
 }
 
 
-function _map(obj: {}, callback: (key: string, item: any)=>any) : any[] {
-    var arr = [];
-    for (var key in obj) {
-        if (obj.hasOwnProperty(key)) {
-           var ret = callback(key, obj[key]);
-            arr.push(ret);
-        }
-    }
-    return arr;
-}
 
 class AnnotatedType {
 
@@ -59,12 +26,8 @@ class AnnotatedType {
         ){
         this.annotations = {};
         annotations.map((annotation: Annotation)=>{
-            this.annotations[annotation.getAnnotation()] = annotation;
+            this.annotations[annotation.getName()] = annotation;
         });
-    }
-
-    public getName() {
-        return this.type.getName();
     }
 
     public getType() {
@@ -73,13 +36,6 @@ class AnnotatedType {
 
     public getAnnotations() {
         return this.annotations;
-    }
-
-    public toJSON() {
-        return {
-            "type": this.type,
-            "annotations": this.annotations
-        }
     }
 
     public getAnnotation(name: string): Annotation {
@@ -94,43 +50,28 @@ class AnnotatedType {
 
 class AnnotatedClass {
 
-    constructor(private classType: TypeClass, private annotations: AnnotatedType[]) {
-
+    constructor(private classType: TypeClass, private annotations: Annotation[]) {
     }
 
     public getType() {
         return this.classType;
     }
 
-    public getConstructor() {
+    public getClassConstructor() {
         return this.classType.getConstructor();
     }
 
-    public getTypeAnnotations(name: string): AnnotatedType[] {
-        return this.annotations.filter((annotation: AnnotatedType) => {
-            if (annotation.getAnnotation(name) != null) {
-                return true;
-            }
-            return false;
-        });
-    }
-
     public getAnnotations(name: string): Annotation[] {
-        var annotations = [];
-        this.annotations.forEach((annotatedType: AnnotatedType)=>{
-            var annotation = annotatedType.getAnnotation(name);
-            if (annotation) {
-                annotations.push(annotation);
-            }
+        return this.annotations.filter((annotation: Annotation)=>{
+            return annotation.getName() === name;
         });
-        return annotations;
     }
 
     public getClassAnnotation(name: string): Annotation {
         for (var i = 0; i<this.annotations.length; i++) {
             var type = this.annotations[i].getType();
             if (type.getType() == "constructor") {
-                return this.annotations[i].getAnnotation(name);
+                return this.annotations[i];
             }
         }
         return null;
@@ -143,23 +84,23 @@ class AnnotationReader {
     private classTypes: {[d: string]: TypeClass} = {};
 
     constructor (private classAnnotations: {[d:string] :AnnotatedClassJson}) {
-        var classAnnotationsArray = _map(classAnnotations,(key, obj)=>{
+        var classAnnotationsArray = this.map(classAnnotations,(key, obj)=>{
             return obj;
         });
         classAnnotationsArray.forEach((classAnnotation: AnnotatedClassJson)=>{
             var classType = this.getClassFromJson(classAnnotation.type);
-            var annotations: AnnotatedType[];
-            annotations = _map(classAnnotation.annotations, (key: string, json: AnnotatedTypeJson)=>{
-                return this.getAnnotatedTypeFromJson(json);
+            var annotations: Annotation[] =[];
+            this.map(classAnnotation.annotations, (key: string, json: AnnotatedTypeJson)=>{
+                annotations = [].concat(annotations, this.getAnnotationsFromJson(json));
             });
             this.annotatedClasses.push(new AnnotatedClass(classType, annotations))
         })
     }
 
-    public getAnnotations(classConstructor) {
+    public getAnnotationsForClass(classConstructor) {
         // cache these ?
         for (var i=0; i<this.annotatedClasses.length; i++) {
-            if (this.annotatedClasses[i].getConstructor() === classConstructor) {
+            if (this.annotatedClasses[i].getClassConstructor() === classConstructor) {
                 return this.annotatedClasses[i];
             }
         }
@@ -167,12 +108,12 @@ class AnnotationReader {
     }
 
     public getAnnotationsForInstance(instance) {
-        return this.getAnnotations(instance.constructor);
+        return this.getAnnotationsForClass(instance.constructor);
     }
 
     public getClassesWithAnnotation(name: string): AnnotatedClass[] {
         return this.annotatedClasses.filter((annotatedClass: AnnotatedClass)=>{
-            if (annotatedClass.getTypeAnnotations(name).length >= 1) {
+            if (annotatedClass.getAnnotations(name).length >= 1) {
                 return true;
             }
             return false;
@@ -212,7 +153,7 @@ class AnnotationReader {
     }
 
     private getTypeFromJson(json: TypeJson): Type {
-        // todo - implment properly
+        // todo - implement properly
         if( typeof json['parent'] !== "undefined") {
             return this.getClassFromJson(<TypeClassJson> json);
         } else {
@@ -264,14 +205,45 @@ class AnnotationReader {
         }
     }
 
-    private getAnnotatedTypeFromJson(json: AnnotatedTypeJson): AnnotatedType {
+    private getAnnotationsFromJson(json: AnnotatedTypeJson): Annotation[] {
         var type = this.getTypeFromJson(json.type);
-        var annotations = _map(json.annotations, (key, json: AnnotationJson) => {
-            return new Annotation(type, json.annotation, json.params);
-
+        var annotations = this.map(json.annotations, (key, json: AnnotationJson) => {
+            var annotationClassName = json.annotation.charAt(0).toUpperCase() + json.annotation.slice(1) + 'Annotation';
+            if (this.classExtendsClass(annotationClassName, 'Annotation')) {
+                var annotationClass = this.getConstructorFromClassName(annotationClassName);
+                var annotation = new annotationClass(type, json.annotation);
+                for (var param in json.params) {
+                    if (json.params.hasOwnProperty(param)){
+                        if (typeof annotation[param] === 'undefined') {
+                            throw new Error('Unsupported param ' + param + ' on annotation @' + json.annotation);
+                        } else {
+                            annotation[param] = json.params[param];
+                        }
+                    }
+                }
+                return annotation;
+            } else {
+                throw new Error('Annotation @' + json.annotation + ' (' + annotationClassName + ') must extend Annotation');
+            }
         });
-        return new AnnotatedType(type, annotations);
+        return annotations;
     }
 
-}
+    private classExtendsClass(child:string, parent: string) {
+        // todo, follow dependency tree, not just first parent
+        return this.getClassFromName(child).getParent() === parent;
 
+
+    }
+
+    private map(obj: {}, callback: (key: string, item: any)=>any) : any[] {
+        var arr = [];
+        for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+                var ret = callback(key, obj[key]);
+                arr.push(ret);
+            }
+        }
+        return arr;
+    }
+}

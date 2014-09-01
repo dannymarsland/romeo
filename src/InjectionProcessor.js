@@ -3,6 +3,7 @@ var InjectionProcessor = (function () {
     function InjectionProcessor() {
     }
     InjectionProcessor.prototype.processBean = function (bean, container, reader) {
+        console.log('Proccessing injections');
         var classAnnotations = reader.getAnnotationsForInstance(bean);
         if (classAnnotations) {
             var annotations = classAnnotations.getAnnotations('inject');

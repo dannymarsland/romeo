@@ -7,6 +7,7 @@ class InjectionProcessor implements AnnotationProcessorInterface {
     }
 
     processBean(bean:{}, container: Container, reader:AnnotationReader) {
+        console.log('Proccessing injections');
         var classAnnotations = reader.getAnnotationsForInstance(bean);
         if (classAnnotations) {
             var annotations : Annotation[] = classAnnotations.getAnnotations('inject');

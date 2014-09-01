@@ -32,7 +32,8 @@
           "$element": {
             "annotation": "$element",
             "params": {
-              "qs": ".slider"
+              "qs": ".slider",
+              "root": "body"
             }
           }
         }
@@ -141,78 +142,51 @@
       }
     }
   },
-  "Container": {
+  "InjectAnnotation": {
     "type": {
-      "name": "Container",
-      "parent": null,
+      "name": "InjectAnnotation",
+      "parent": "Annotation",
+      "type": "constructor"
+    },
+    "annotations": {}
+  },
+  "$elementAnnotation": {
+    "type": {
+      "name": "$elementAnnotation",
+      "parent": "Annotation",
       "type": "constructor"
     },
     "annotations": {
-      "beans": {
+      "qs": {
         "type": {
-          "name": "beans",
-          "type": "any",
-          "isArray": true
+          "name": "qs",
+          "type": "string",
+          "isArray": false
         },
         "annotations": {}
       },
-      "constructor": {
+      "root": {
         "type": {
-          "name": "constructor",
-          "type": "function",
-          "returns": {
-            "name": "any",
-            "type": "any",
-            "isArray": false
-          }
+          "name": "root",
+          "type": "string",
+          "isArray": false
         },
         "annotations": {}
-      },
-      "addBean": {
+      }
+    }
+  },
+  "BeanAnnotation": {
+    "type": {
+      "name": "BeanAnnotation",
+      "parent": "Annotation",
+      "type": "constructor"
+    },
+    "annotations": {
+      "scope": {
         "type": {
-          "name": "addBean",
-          "type": "function",
-          "returns": {
-            "name": "any",
-            "type": "any",
-            "isArray": false
-          }
-        },
-        "annotations": {}
-      },
-      "getExistingBean": {
-        "type": {
-          "name": "getExistingBean",
-          "type": "function",
-          "returns": {
-            "name": "any",
-            "type": "any",
-            "isArray": false
-          }
-        },
-        "annotations": {}
-      },
-      "getBean": {
-        "type": {
-          "name": "getBean",
-          "type": "function",
-          "returns": {
-            "name": "any",
-            "type": "any",
-            "isArray": false
-          }
-        },
-        "annotations": {}
-      },
-      "process": {
-        "type": {
-          "name": "process",
-          "type": "function",
-          "returns": {
-            "name": "any",
-            "type": "any",
-            "isArray": false
-          }
+          "name": "scope",
+          "type": "string",
+          "isArray": false
         },
         "annotations": {}
       }
@@ -253,9 +227,9 @@
         },
         "annotations": {}
       },
-      "getAnnotations": {
+      "getAnnotationsForClass": {
         "type": {
-          "name": "getAnnotations",
+          "name": "getAnnotationsForClass",
           "type": "function",
           "returns": {
             "name": "any",
@@ -349,14 +323,38 @@
         },
         "annotations": {}
       },
-      "getAnnotatedTypeFromJson": {
+      "getAnnotationsFromJson": {
         "type": {
-          "name": "getAnnotatedTypeFromJson",
+          "name": "getAnnotationsFromJson",
           "type": "function",
           "returns": {
-            "name": "AnnotatedType",
-            "type": "AnnotatedType",
+            "name": "Annotation",
+            "type": "Annotation",
+            "isArray": true
+          }
+        },
+        "annotations": {}
+      },
+      "classExtendsClass": {
+        "type": {
+          "name": "classExtendsClass",
+          "type": "function",
+          "returns": {
+            "name": "any",
+            "type": "any",
             "isArray": false
+          }
+        },
+        "annotations": {}
+      },
+      "map": {
+        "type": {
+          "name": "map",
+          "type": "function",
+          "returns": {
+            "name": "any",
+            "type": "any",
+            "isArray": true
           }
         },
         "annotations": {}
@@ -394,26 +392,14 @@
         },
         "annotations": {}
       },
-      "getConstructor": {
+      "getClassConstructor": {
         "type": {
-          "name": "getConstructor",
+          "name": "getClassConstructor",
           "type": "function",
           "returns": {
             "name": "any",
             "type": "any",
             "isArray": false
-          }
-        },
-        "annotations": {}
-      },
-      "getTypeAnnotations": {
-        "type": {
-          "name": "getTypeAnnotations",
-          "type": "function",
-          "returns": {
-            "name": "AnnotatedType",
-            "type": "AnnotatedType",
-            "isArray": true
           }
         },
         "annotations": {}
@@ -471,18 +457,6 @@
         },
         "annotations": {}
       },
-      "getName": {
-        "type": {
-          "name": "getName",
-          "type": "function",
-          "returns": {
-            "name": "any",
-            "type": "any",
-            "isArray": false
-          }
-        },
-        "annotations": {}
-      },
       "getType": {
         "type": {
           "name": "getType",
@@ -498,18 +472,6 @@
       "getAnnotations": {
         "type": {
           "name": "getAnnotations",
-          "type": "function",
-          "returns": {
-            "name": "any",
-            "type": "any",
-            "isArray": false
-          }
-        },
-        "annotations": {}
-      },
-      "toJSON": {
-        "type": {
-          "name": "toJSON",
           "type": "function",
           "returns": {
             "name": "any",
@@ -564,33 +526,9 @@
         },
         "annotations": {}
       },
-      "getAnnotation": {
+      "getName": {
         "type": {
-          "name": "getAnnotation",
-          "type": "function",
-          "returns": {
-            "name": "any",
-            "type": "any",
-            "isArray": false
-          }
-        },
-        "annotations": {}
-      },
-      "getParams": {
-        "type": {
-          "name": "getParams",
-          "type": "function",
-          "returns": {
-            "name": "any",
-            "type": "any",
-            "isArray": false
-          }
-        },
-        "annotations": {}
-      },
-      "toJSON": {
-        "type": {
-          "name": "toJSON",
+          "name": "getName",
           "type": "function",
           "returns": {
             "name": "any",
@@ -862,6 +800,83 @@
       "toJSON": {
         "type": {
           "name": "toJSON",
+          "type": "function",
+          "returns": {
+            "name": "any",
+            "type": "any",
+            "isArray": false
+          }
+        },
+        "annotations": {}
+      }
+    }
+  },
+  "Container": {
+    "type": {
+      "name": "Container",
+      "parent": null,
+      "type": "constructor"
+    },
+    "annotations": {
+      "beans": {
+        "type": {
+          "name": "beans",
+          "type": "any",
+          "isArray": true
+        },
+        "annotations": {}
+      },
+      "constructor": {
+        "type": {
+          "name": "constructor",
+          "type": "function",
+          "returns": {
+            "name": "any",
+            "type": "any",
+            "isArray": false
+          }
+        },
+        "annotations": {}
+      },
+      "addBean": {
+        "type": {
+          "name": "addBean",
+          "type": "function",
+          "returns": {
+            "name": "any",
+            "type": "any",
+            "isArray": false
+          }
+        },
+        "annotations": {}
+      },
+      "getExistingBean": {
+        "type": {
+          "name": "getExistingBean",
+          "type": "function",
+          "returns": {
+            "name": "any",
+            "type": "any",
+            "isArray": false
+          }
+        },
+        "annotations": {}
+      },
+      "getBean": {
+        "type": {
+          "name": "getBean",
+          "type": "function",
+          "returns": {
+            "name": "any",
+            "type": "any",
+            "isArray": false
+          }
+        },
+        "annotations": {}
+      },
+      "process": {
+        "type": {
+          "name": "process",
           "type": "function",
           "returns": {
             "name": "any",

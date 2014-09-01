@@ -1,4 +1,5 @@
 ///<reference path="../vendor/jquery.d"/>
+///<reference path="../src/Annotations"/>
 var Application = (function () {
     function Application() {
     }

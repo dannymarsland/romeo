@@ -1,5 +1,6 @@
 ///<reference path="AnnotationProcessorInterface"/>
 ///<reference path="AnnotationReader"/>
+///<reference path="Annotations"/>
 var Container = (function () {
     function Container(annotationReader, annotationProcessors) {
         this.annotationReader = annotationReader;
@@ -16,6 +17,7 @@ var Container = (function () {
 
     Container.prototype.getExistingBean = function (classConstructor) {
         for (var i = 0; i < this.beans.length; i++) {
+            // no inheritance here
             if (this.beans[i].constructor === classConstructor) {
                 return this.beans[i];
             }
@@ -24,16 +26,13 @@ var Container = (function () {
     };
 
     Container.prototype.getBean = function (classConstructor) {
-        var classAnnotations = this.annotationReader.getAnnotations(classConstructor);
+        var classAnnotations = this.annotationReader.getAnnotationsForClass(classConstructor);
         if (classAnnotations) {
             var beanAnnotation = classAnnotations.getClassAnnotation('bean');
             if (beanAnnotation) {
-                var params = beanAnnotation.getParams({
-                    'scope': 'singleton'
-                });
                 var type = beanAnnotation.getType();
                 var constructorFn = type.getConstructor();
-                var scope = params['scope'];
+                var scope = beanAnnotation.scope;
                 if (scope == 'singleton') {
                     var bean = this.getExistingBean(classConstructor);
                     if (bean) {
@@ -42,6 +41,7 @@ var Container = (function () {
                         throw new Error('Cannot find bean of type ' + type.getName() + ' in container. ');
                     }
                 } else if (scope == 'prototype') {
+                    // create a brand new bean
                     if (constructorFn) {
                         var bean = new constructorFn();
                         this.addBean(bean);

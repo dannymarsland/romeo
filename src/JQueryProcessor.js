@@ -1,4 +1,5 @@
 ///<reference path="AnnotationProcessorInterface"/>
+///<reference path="Annotations"/>
 ///<reference path="../vendor/jquery.d"/>
 var JQueryProcessor = (function () {
     function JQueryProcessor() {
@@ -10,14 +11,13 @@ var JQueryProcessor = (function () {
         };
         var classAnnotations = reader.getAnnotationsForInstance(bean);
         if (classAnnotations) {
-            var typeAnnotations = classAnnotations.getTypeAnnotations('$element');
-            for (var i = 0; i < typeAnnotations.length; i++) {
-                var type = typeAnnotations[i].getType();
-                var annotation = typeAnnotations[i].getAnnotation('$element');
-                var params = annotation.getParams(defaultParams);
-                var qs = params['qs'];
+            var annotations = classAnnotations.getAnnotations('$element');
+            for (var i = 0; i < annotations.length; i++) {
+                var type = annotations[i].getType();
+                var annotation = annotations[i];
+                var qs = annotation.qs;
                 if (qs) {
-                    var root = params['root'];
+                    var root = annotation.root;
                     if (root === "this") {
                         var query = '' + qs;
                         if (bean['el']) {

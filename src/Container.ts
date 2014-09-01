@@ -1,5 +1,6 @@
 ///<reference path="AnnotationProcessorInterface"/>
 ///<reference path="AnnotationReader"/>
+///<reference path="Annotations"/>
 
 class Container {
 
@@ -30,16 +31,13 @@ class Container {
     }
 
     public getBean(classConstructor: Function): any {
-        var classAnnotations = this.annotationReader.getAnnotations(classConstructor);
+        var classAnnotations = this.annotationReader.getAnnotationsForClass(classConstructor);
         if (classAnnotations) {
-            var beanAnnotation = classAnnotations.getClassAnnotation('bean');
+            var beanAnnotation = <BeanAnnotation>classAnnotations.getClassAnnotation('bean');
             if (beanAnnotation) {
-                var params = beanAnnotation.getParams({
-                    'scope': 'singleton'
-                });
                 var type = beanAnnotation.getType();
                 var constructorFn = type.getConstructor();
-                var scope = params['scope'];
+                var scope = beanAnnotation.scope;
                 if (scope == 'singleton') {
                     var bean = this.getExistingBean(classConstructor);
                     if (bean) {

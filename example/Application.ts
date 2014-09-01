@@ -1,4 +1,5 @@
 ///<reference path="../vendor/jquery.d"/>
+///<reference path="../src/Annotations"/>
 
 class Application  {
 
@@ -24,6 +25,6 @@ class Gallery {
 
 /** @bean({"scope":"prototype"}) **/
 class Slider {
-    /** @$element({"qs":".slider"})*/
+    /** @$element({"qs":".slider", "root":"body"})*/
     private $el: JQuery;
 }
