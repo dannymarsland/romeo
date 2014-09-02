@@ -5,6 +5,16 @@
 ///<reference path="../src/JQueryProcessor"/>
 declare var __annotations : {[d:string] :AnnotatedClassJson};
 
+
+
+interface Object {
+    FUCK: string;
+}
+
+var a = {};
+
+
+
 var reader = new AnnotationReader(__annotations);
 var processors = [
     new InjectionProcessor(),

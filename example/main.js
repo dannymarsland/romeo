@@ -4,6 +4,8 @@
 ///<reference path="../src/InjectionProcessor"/>
 ///<reference path="../src/JQueryProcessor"/>
 
+var a = {};
+
 var reader = new AnnotationReader(__annotations);
 var processors = [
     new InjectionProcessor(),

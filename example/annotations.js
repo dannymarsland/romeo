@@ -3,7 +3,7 @@
   "JsonExample": {
     "type": {
       "name": "JsonExample",
-      "parent": null,
+      "parent": "Annotated",
       "type": "constructor"
     },
     "annotations": {
@@ -204,7 +204,7 @@
   "Application": {
     "type": {
       "name": "Application",
-      "parent": null,
+      "parent": "Annotated",
       "type": "constructor"
     },
     "annotations": {
@@ -221,9 +221,9 @@
           }
         }
       },
-      "constructor": {
+      "aTestFunction": {
         "type": {
-          "name": "constructor",
+          "name": "aTestFunction",
           "type": "function",
           "returns": {
             "name": "any",
@@ -553,6 +553,83 @@
           "returns": {
             "name": "Annotation",
             "type": "Annotation",
+            "isArray": false
+          }
+        },
+        "annotations": {}
+      }
+    }
+  },
+  "Annotated": {
+    "type": {
+      "name": "Annotated",
+      "parent": null,
+      "type": "constructor"
+    },
+    "annotations": {
+      "__annotations": {
+        "type": {
+          "name": "__annotations",
+          "type": "AnnotatedClass",
+          "isArray": false
+        },
+        "annotations": {}
+      },
+      "__checkAnnotations": {
+        "type": {
+          "name": "__checkAnnotations",
+          "type": "function",
+          "returns": {
+            "name": "any",
+            "type": "any",
+            "isArray": false
+          }
+        },
+        "annotations": {}
+      },
+      "getAnnotations": {
+        "type": {
+          "name": "getAnnotations",
+          "type": "function",
+          "returns": {
+            "name": "AnnotatedClass",
+            "type": "AnnotatedClass",
+            "isArray": false
+          }
+        },
+        "annotations": {}
+      },
+      "getMemberAnnotations": {
+        "type": {
+          "name": "getMemberAnnotations",
+          "type": "function",
+          "returns": {
+            "name": "any",
+            "type": "any",
+            "isArray": false
+          }
+        },
+        "annotations": {}
+      },
+      "getAnnotationsForMember": {
+        "type": {
+          "name": "getAnnotationsForMember",
+          "type": "function",
+          "returns": {
+            "name": "any",
+            "type": "any",
+            "isArray": false
+          }
+        },
+        "annotations": {}
+      },
+      "getClassDefinition": {
+        "type": {
+          "name": "getClassDefinition",
+          "type": "function",
+          "returns": {
+            "name": "TypeClass",
+            "type": "TypeClass",
             "isArray": false
           }
         },

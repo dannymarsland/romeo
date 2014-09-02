@@ -2,14 +2,17 @@
 ///<reference path="../src/Annotations"/>
 ///<reference path="../src/AnnotationReader"/>
 
-class Application  {
+class Application extends Annotated {
 
     /** @inject */
     private gallery: Gallery;
 
-    constructor() {
+
+    public aTestFunction() {
+        return '1234';
     }
 }
+
 
 /** @bean({"scope":"prototype"}) */
 class Gallery {
@@ -36,24 +39,28 @@ class JsonProcessor {
 
     }
 
-    public classToJson(instance) {
-        var annotations = this.annotationReader.getAnnotationsForInstance(instance);
-        var jsonAnnotations = <JsonAnnotation[]>annotations.getAnnotations('json');
-        var json = {};
-        for (var i=0; i<jsonAnnotations.length; i++) {
-            var annotation = jsonAnnotations[i];
-            if (!annotation.ignore) {
-                var oldName = annotation.getType().getName();
-                var name = annotation.name ? annotation.name : oldName;
-                json[name] = instance[oldName];
+    public classToJson(obj : Annotated) {
+        debugger;
+        if (obj instanceof Annotated) {
+            var jsonAnnotations = <JsonAnnotation[]>obj.getMemberAnnotations('json');
+            var json = {};
+            for (var i=0; i<jsonAnnotations.length; i++) {
+                var annotation = jsonAnnotations[i];
+                if (!annotation.ignore) {
+                    var oldName = annotation.getType().getName();
+                    var name = annotation.name ? annotation.name : oldName;
+                    json[name] = obj[oldName];
+                }
             }
+            return json;
+        } else {
+            throw new Error('Object must extend Annotated class :' + obj);
         }
-        return json;
     }
 }
 
 
-class JsonExample {
+class JsonExample extends Annotated  {
     /** @json({"ignore":true}) */
     private ignored : string = 'this should be ignored';
     /** @json */
