@@ -1,6 +1,7 @@
 ///<reference path="../vendor/jquery.d"/>
 ///<reference path="../src/Annotations"/>
 ///<reference path="../src/AnnotationReader"/>
+///<reference path="../src/Annotated"/>
 
 class Application extends Annotated {
 
@@ -40,7 +41,6 @@ class JsonProcessor {
     }
 
     public classToJson(obj : Annotated) {
-        debugger;
         if (obj instanceof Annotated) {
             var jsonAnnotations = <JsonAnnotation[]>obj.getMemberAnnotations('json');
             var json = {};
@@ -69,3 +69,5 @@ class JsonExample extends Annotated  {
     private renamed: string = 'renamed';
     private notShown = 'notshown';
 }
+
+

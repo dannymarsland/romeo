@@ -46,36 +46,6 @@ class AnnotatedType {
     }
 }
 
-
-class Annotated {
-    private __annotations: AnnotatedClass;
-    private __checkAnnotations() {
-        if ( typeof this.__annotations == 'undefined') {
-            throw new Error ('Call to __getAnnotations() before annotations have been parsed (__annotations is undefined)')
-        }
-    }
-    public getAnnotations() : AnnotatedClass
-    {
-        this.__checkAnnotations();
-        return this.__annotations;
-    }
-
-    public getMemberAnnotations(annotationName: string = null)
-    {
-        return this.getAnnotations().getAnnotations(annotationName);
-    }
-
-    public getAnnotationsForMember(memberName: string, annotationName: string = null)
-    {
-        return this.getAnnotations().getAnnotationsFor(memberName, annotationName);
-    }
-
-    public getClassDefinition() : TypeClass
-    {
-        return this.getAnnotations().getType();
-    }
-}
-
 class AnnotatedClass {
 
     constructor(private classType: TypeClass, private annotations: Annotation[]) {
@@ -130,7 +100,11 @@ class AnnotationReader {
 
             var annotatedClass = new AnnotatedClass(classType, annotations);
             // add the annotations to class prototype
-            classType.getConstructor().prototype['__annotations'] = annotatedClass;
+            
+            //classType.getConstructor()['__annotations'] = annotatedClass;
+            //classType.getConstructor()['__classDefinition'] = classType;
+            classType.getConstructor()['__classDefinitionJson'] = classAnnotation.type;
+
             this.annotatedClasses.push(annotatedClass);
         });
 

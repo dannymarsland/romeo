@@ -41,35 +41,6 @@ var AnnotatedType = (function () {
     return AnnotatedType;
 })();
 
-var Annotated = (function () {
-    function Annotated() {
-    }
-    Annotated.prototype.__checkAnnotations = function () {
-        if (typeof this.__annotations == 'undefined') {
-            throw new Error('Call to __getAnnotations() before annotations have been parsed (__annotations is undefined)');
-        }
-    };
-    Annotated.prototype.getAnnotations = function () {
-        this.__checkAnnotations();
-        return this.__annotations;
-    };
-
-    Annotated.prototype.getMemberAnnotations = function (annotationName) {
-        if (typeof annotationName === "undefined") { annotationName = null; }
-        return this.getAnnotations().getAnnotations(annotationName);
-    };
-
-    Annotated.prototype.getAnnotationsForMember = function (memberName, annotationName) {
-        if (typeof annotationName === "undefined") { annotationName = null; }
-        return this.getAnnotations().getAnnotationsFor(memberName, annotationName);
-    };
-
-    Annotated.prototype.getClassDefinition = function () {
-        return this.getAnnotations().getType();
-    };
-    return Annotated;
-})();
-
 var AnnotatedClass = (function () {
     function AnnotatedClass(classType, annotations) {
         this.classType = classType;
@@ -127,7 +98,10 @@ var AnnotationReader = (function () {
             var annotatedClass = new AnnotatedClass(classType, annotations);
 
             // add the annotations to class prototype
-            classType.getConstructor().prototype['__annotations'] = annotatedClass;
+            //classType.getConstructor()['__annotations'] = annotatedClass;
+            //classType.getConstructor()['__classDefinition'] = classType;
+            classType.getConstructor()['__classDefinitionJson'] = classAnnotation.type;
+
             _this.annotatedClasses.push(annotatedClass);
         });
     }

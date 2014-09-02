@@ -1,6 +1,7 @@
 ///<reference path="../vendor/jquery.d"/>
 ///<reference path="../src/Annotations"/>
 ///<reference path="../src/AnnotationReader"/>
+///<reference path="../src/Annotated"/>
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -37,7 +38,6 @@ var JsonProcessor = (function () {
         this.annotationReader = annotationReader;
     }
     JsonProcessor.prototype.classToJson = function (obj) {
-        debugger;
         if (obj instanceof Annotated) {
             var jsonAnnotations = obj.getMemberAnnotations('json');
             var json = {};
