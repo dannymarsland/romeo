@@ -1,19 +1,22 @@
 ///<reference path="AnnotationProcessorInterface"/>
 ///<reference path="Annotations"/>
-///<reference path="../vendor/jquery.d"/>
-var JQueryProcessor = (function () {
-    function JQueryProcessor() {
+///<reference path="../js/vendor/jquery.d"/>
+
+class JQueryProcessor implements AnnotationProcessorInterface {
+
+    constructor() {
     }
-    JQueryProcessor.prototype.processBean = function (bean, container, reader) {
+
+    processBean(bean:{}, container:Container, reader:AnnotationReader) {
         var defaultParams = {
             "qs": null,
             "root": "this"
         };
         var classAnnotations = reader.getAnnotationsForInstance(bean);
         if (classAnnotations) {
-            var annotations = classAnnotations.getAnnotations('$element');
-            for (var i = 0; i < annotations.length; i++) {
-                var type = annotations[i].getType();
+            var annotations = <$elementAnnotation[]>classAnnotations.getAnnotations('$element');
+            for (var i=0 ; i <annotations.length; i++) {
+                var type = <TypeVariable>annotations[i].getType();
                 var annotation = annotations[i];
                 var qs = annotation.qs;
                 if (qs) {
@@ -38,19 +41,19 @@ var JQueryProcessor = (function () {
                     } else {
                         throw new Error("No elements match '" + query + "'");
                     }
+
                 } else {
                     throw new Error("$element annotation must have 'qs' param");
                 }
             }
         }
-    };
+    }
 
-    JQueryProcessor.prototype.postProcess = function (beans, reader) {
-    };
+    postProcess(beans:{}[], reader:AnnotationReader) {
+    }
 
-    JQueryProcessor.prototype.getAnnotationNames = function () {
+    getAnnotationNames(): string[] {
         return ['$element'];
-    };
-    return JQueryProcessor;
-})();
-//# sourceMappingURL=JQueryProcessor.js.map
+    }
+
+}

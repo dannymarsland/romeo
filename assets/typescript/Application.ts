@@ -1,7 +1,7 @@
-///<reference path="../vendor/jquery.d"/>
-///<reference path="../src/Annotations"/>
-///<reference path="../src/AnnotationReader"/>
-///<reference path="../src/Annotated"/>
+///<reference path="../js/vendor/jquery.d.ts"/>
+///<reference path="Annotations"/>
+///<reference path="AnnotationReader"/>
+///<reference path="Annotated"/>
 
 class Application extends Annotated {
 

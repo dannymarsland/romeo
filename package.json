@@ -17,5 +17,21 @@
   "dependencies": {
     "grunt-typescipt-annotations": "git+https://github.com/dannymarsland/grunt-typescript-annotations.git",
     "grunt-contrib-watch": "^0.6.1"
-  }
+  },
+    "devDependencies": {
+        "grunt": "^0.4.4",
+        "grunt-cli": "^0.1.13",
+        "grunt-contrib-clean": "~0.6.0",
+        "grunt-contrib-compass": "~0.9.1",
+        "grunt-contrib-concat": "^0.5.0",
+        "grunt-contrib-copy": "~0.5.0",
+        "grunt-contrib-uglify": "~0.5.1",
+        "grunt-contrib-watch": "^0.6.1",
+        "grunt-newer": "^0.7.0",
+        "grunt-contrib-imagemin": "~0.8.1",
+        "grunt-userev": "git+https://github.com/dannymarsland/grunt-userev.git",
+        "grunt-filerev": "git+https://github.com/dannymarsland/grunt-filerev.git",
+        "grunt-ts": "^1.11.8",
+        "grunt-contrib-cssmin": "^0.10.0"
+    }
 }

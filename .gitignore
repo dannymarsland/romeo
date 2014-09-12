@@ -1,0 +1,5 @@
+.tscache
+.vagrant
+node_modules
+logs
+public/static

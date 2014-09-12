@@ -1,8 +1,12 @@
 ///<reference path="Annotations"/>
-var Defined = (function () {
-    function Defined() {
-    }
-    Defined.getClassDefinition = function () {
+
+class Defined {
+
+    private static __classDefinition: TypeClass;
+    private static __classDefinitionJson: TypeClassJson;
+
+    public static getClassDefinition() : TypeClass
+    {
         if (!this.__classDefinition) {
             var definition = this.__classDefinitionJson;
             if (typeof definition !== 'object' || definition === null) {
@@ -15,16 +19,18 @@ var Defined = (function () {
                 throw new Error('Invalid class name in __classDefinitionJson: "' + name + '"');
             }
             var parent = definition.parent;
-            this.__classDefinition = new TypeClass(name, this, parent);
+            this.__classDefinition = new TypeClass(name, this, parent)
         }
         return this.__classDefinition;
-    };
+    }
 
-    Defined.prototype.getClassDefinition = function () {
+    public getClassDefinition() : TypeClass
+    {
         return this['constructor']['getClassDefinition']();
-    };
+    }
 
-    Defined.__getClassDefinitionForClass = function (className) {
+    public static __getClassDefinitionForClass(className: string): TypeClass
+    {
         var constructorFn = this.__getConstructorFromClassName(className);
         if (constructorFn == null) {
             var correctClassName = this.__findCorrectClassName(className);
@@ -39,17 +45,16 @@ var Defined = (function () {
         }
 
         if (typeof constructorFn['getClassDefinition'] === 'function') {
-            return constructorFn.getClassDefinition();
+            return (<Defined>constructorFn).getClassDefinition();
         }
-
         // should cache these
         return new TypeClass(className, constructorFn);
-    };
+    }
 
-    Defined.__getConstructorFromClassName = function (name) {
+    private static __getConstructorFromClassName(name: string) {
         var parts = name.split('.');
         var scope = window;
-        for (var i = 0; i < parts.length - 2; i++) {
+        for (var i=0; i<parts.length-2; i++) {
             var part = parts[i];
             if (typeof scope[part] == "object" || typeof scope[part] == "function") {
                 scope = scope[part];
@@ -57,21 +62,22 @@ var Defined = (function () {
                 return null;
             }
         }
-        var className = parts[parts.length - 1];
+        var className= parts[parts.length-1];
         if (typeof scope[className] == "function") {
             return scope[className];
         } else {
             return null;
         }
-    };
+    }
 
-    Defined.__findCorrectClassName = function (name) {
+    private static __findCorrectClassName(name: string) : string {
         if (name.indexOf('.') > -1) {
             throw new Error('Cannot try find correct class name for a namespaced class: ' + name);
         }
         var scope = window;
         var lowercaseClassName = name.toLowerCase();
-
+        // search everything in the window....
+        // @todo optimise this - this is called quite often so keep a cache!
         for (var key in scope) {
             if (scope.hasOwnProperty(key)) {
                 if (lowercaseClassName == key.toLowerCase()) {
@@ -83,7 +89,6 @@ var Defined = (function () {
             }
         }
         return null;
-    };
-    return Defined;
-})();
-//# sourceMappingURL=Defined.js.map
+    }
+
+}

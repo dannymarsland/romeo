@@ -1,10 +1,13 @@
 
 ///<reference path="AnnotationsJson"/>
 ///<reference path="Types"/>
+///<reference path="Defined"/>
 
 
-class Annotation {
-    constructor(private __type: Type, private __name: string) {}
+class Annotation extends Defined {
+    constructor(private __type: Type, private __name: string) {
+        super();
+    }
 
     public getType(): Type {
         return this.__type;
@@ -108,7 +111,6 @@ class AnnotationReader {
             this.annotatedClasses.push(annotatedClass);
         });
 
-
     }
 
     public getAnnotationsForClass(classConstructor) {
@@ -143,7 +145,9 @@ class AnnotationReader {
             if (typeof scope[part] == "object" || typeof scope[part] == "function") {
                 scope = scope[part];
             } else {
-                throw new Error("Class does not exist " + name);
+                //throw new Error("Class does not exist " + name);
+                console.warn("Class could not be found " + name);
+
             }
         }
         var className= parts[parts.length-1];
@@ -162,7 +166,8 @@ class AnnotationReader {
                     }
                 }
             }
-            throw new Error("Class does not exist " + name);
+            //throw new Error("Class does not exist " + name);
+            console.warn("Class could not be found " + name);
         }
     }
 
@@ -246,8 +251,6 @@ class AnnotationReader {
     private classExtendsClass(child:string, parent: string) {
         // todo, follow dependency tree, not just first parent
         return this.getClassFromName(child).getParent() === parent;
-
-
     }
 
     private map(obj: {}, callback: (key: string, item: any)=>any) : any[] {
